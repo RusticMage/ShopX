@@ -1,5 +1,6 @@
 package com.shopx.service;
 
+import com.shopx.exception.ProductNotFoundException;
 import com.shopx.model.Product;
 import com.shopx.repository.ProductRepository;
 import org.springframework.stereotype.Service;
@@ -31,8 +32,7 @@ public class ProductService {
     public Product updateProduct(Long id, Product updatedProduct) {
 
         Product existingProduct = productRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Product not found"));
-
+            .orElseThrow(() -> new ProductNotFoundException(id));
         existingProduct.setName(updatedProduct.getName());
         existingProduct.setDescription(updatedProduct.getDescription());
         existingProduct.setPrice(updatedProduct.getPrice());
@@ -45,8 +45,7 @@ public class ProductService {
     public void deleteProduct(Long id) {
 
         if (!productRepository.existsById(id)) {
-            throw new RuntimeException("Product not found");
-        }
+            throw new ProductNotFoundException(id);        }
 
         productRepository.deleteById(id);
     }

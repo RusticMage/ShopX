@@ -1,7 +1,12 @@
 package com.shopx.controller;
 
+import com.shopx.dto.ProductRequest;
+import com.shopx.model.Category;
 import com.shopx.model.Product;
 import com.shopx.service.ProductService;
+
+import jakarta.validation.Valid;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,8 +23,8 @@ public class ProductController {
     }
 
     @GetMapping
-    public List<Product> getAllProducts() {
-        return productService.getAllProducts();
+    public ResponseEntity<List<Product>> getAllProducts() {
+        return ResponseEntity.ok(productService.getAllProducts());
     }
 
     @GetMapping("/{id}")
@@ -31,16 +36,46 @@ public class ProductController {
     }
 
     @PostMapping
-    public Product createProduct(@RequestBody Product product) {
-        return productService.createProduct(product);
+    public ResponseEntity<Product> createProduct(
+            @Valid @RequestBody ProductRequest request) {
+
+        Product product = new Product();
+
+        product.setName(request.getName());
+        product.setDescription(request.getDescription());
+        product.setPrice(request.getPrice());
+        product.setStockQuantity(request.getStockQuantity());
+
+        Category category = new Category();
+        category.setId(request.getCategoryId());
+
+        product.setCategory(category);
+
+        return ResponseEntity.ok(
+                productService.createProduct(product)
+        );
     }
 
     @PutMapping("/{id}")
-    public Product updateProduct(
+    public ResponseEntity<Product> updateProduct(
             @PathVariable Long id,
-            @RequestBody Product product) {
+            @Valid @RequestBody ProductRequest request) {
 
-        return productService.updateProduct(id, product);
+        Product updatedProduct = new Product();
+
+        updatedProduct.setName(request.getName());
+        updatedProduct.setDescription(request.getDescription());
+        updatedProduct.setPrice(request.getPrice());
+        updatedProduct.setStockQuantity(request.getStockQuantity());
+
+        Category category = new Category();
+        category.setId(request.getCategoryId());
+
+        updatedProduct.setCategory(category);
+
+        return ResponseEntity.ok(
+                productService.updateProduct(id, updatedProduct)
+        );
     }
 
     @DeleteMapping("/{id}")

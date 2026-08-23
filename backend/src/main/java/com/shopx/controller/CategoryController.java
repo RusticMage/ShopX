@@ -1,7 +1,11 @@
 package com.shopx.controller;
 
+import com.shopx.dto.CategoryRequest;
 import com.shopx.model.Category;
 import com.shopx.service.CategoryService;
+
+import jakarta.validation.Valid;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,8 +22,8 @@ public class CategoryController {
     }
 
     @GetMapping
-    public List<Category> getAllCategories() {
-        return categoryService.getAllCategories();
+    public ResponseEntity<List<Category>> getAllCategories() {
+        return ResponseEntity.ok(categoryService.getAllCategories());
     }
 
     @GetMapping("/{id}")
@@ -31,16 +35,28 @@ public class CategoryController {
     }
 
     @PostMapping
-    public Category createCategory(@RequestBody Category category) {
-        return categoryService.createCategory(category);
+    public ResponseEntity<Category> createCategory(
+            @Valid @RequestBody CategoryRequest request) {
+
+        Category category = new Category();
+        category.setName(request.getName());
+
+        return ResponseEntity.ok(
+                categoryService.createCategory(category)
+        );
     }
 
     @PutMapping("/{id}")
-    public Category updateCategory(
+    public ResponseEntity<Category> updateCategory(
             @PathVariable Long id,
-            @RequestBody Category category) {
+            @Valid @RequestBody CategoryRequest request) {
 
-        return categoryService.updateCategory(id, category);
+        Category updatedCategory = new Category();
+        updatedCategory.setName(request.getName());
+
+        return ResponseEntity.ok(
+                categoryService.updateCategory(id, updatedCategory)
+        );
     }
 
     @DeleteMapping("/{id}")

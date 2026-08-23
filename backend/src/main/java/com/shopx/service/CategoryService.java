@@ -1,5 +1,6 @@
 package com.shopx.service;
 
+import com.shopx.exception.CategoryNotFoundException;
 import com.shopx.model.Category;
 import com.shopx.repository.CategoryRepository;
 import org.springframework.stereotype.Service;
@@ -31,8 +32,7 @@ public class CategoryService {
     public Category updateCategory(Long id, Category updatedCategory) {
 
         Category existingCategory = categoryRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Category not found"));
-
+         .orElseThrow(() -> new CategoryNotFoundException(id));
         existingCategory.setName(updatedCategory.getName());
 
         return categoryRepository.save(existingCategory);
@@ -41,8 +41,7 @@ public class CategoryService {
     public void deleteCategory(Long id) {
 
         if (!categoryRepository.existsById(id)) {
-            throw new RuntimeException("Category not found");
-        }
+            throw new CategoryNotFoundException(id);        }
 
         categoryRepository.deleteById(id);
     }
