@@ -49,4 +49,41 @@ public class InventoryService {
 
         inventoryRepository.deleteById(id);
     }
+
+    public Inventory reduceStock(Long inventoryId, Integer quantity) {
+
+    Inventory inventory = inventoryRepository.findById(inventoryId)
+            .orElseThrow(() ->
+                    new RuntimeException(
+                            "Inventory not found with id: " + inventoryId));
+
+    if (inventory.getQuantity() < quantity) {
+        throw new RuntimeException("Insufficient stock");
+    }
+
+    inventory.setQuantity(
+            inventory.getQuantity() - quantity
+    );
+
+    return inventoryRepository.save(inventory);
+}
+public Inventory reduceStockByProduct(
+        com.shopx.model.Product product,
+        Integer quantity) {
+
+    Inventory inventory = inventoryRepository.findByProduct(product)
+            .orElseThrow(() ->
+                    new RuntimeException(
+                            "Inventory not found for product"));
+
+    if (inventory.getQuantity() < quantity) {
+        throw new RuntimeException("Insufficient stock");
+    }
+
+    inventory.setQuantity(
+            inventory.getQuantity() - quantity
+    );
+
+    return inventoryRepository.save(inventory);
+}
 }

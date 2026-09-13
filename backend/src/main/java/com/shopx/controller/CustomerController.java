@@ -37,7 +37,7 @@ public class CustomerController {
     public ResponseEntity<Customer> getCustomerByEmail(
             @PathVariable String email) {
 
-        return customerService.getCustomerByEmail(email)
+        return customerService.getByEmail(email)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
