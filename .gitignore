@@ -1,0 +1,22 @@
+# PostgreSQL / local database files
+*.sql.bak
+
+# Python / temporary files
+__pycache__/
+*.pyc
+
+# Java / Maven
+target/
+*.class
+
+# IDE files
+.idea/
+.vscode/
+
+# Environment / secrets
+.env
+*.env
+
+# OS files
+.DS_Store
+Thumbs.db
